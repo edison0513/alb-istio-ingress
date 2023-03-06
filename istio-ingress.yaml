@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: istio-ingress
+  namespace: istio-system
+  labels:
+    app:  tapnow-staging-ingress
+  annotations:
+    # create AWS Application LoadBalancer
+    kubernetes.io/ingress.class: alb
+    # external type
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    # open ports 80 and 443 
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    # vpc id
+    alb.ingress.kubernetes.io/subnets: subnet1, subnet2
+spec:
+  ingressClassName: alb
+  defaultBackend:
+    service:
+      name: istio-ingressgateway
+      port:
+        number: 80
